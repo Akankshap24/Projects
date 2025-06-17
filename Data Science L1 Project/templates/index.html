@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Price Predictor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #e6f7ff;
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Stock Price Predictor</h2>
+    <input type="text" id="symbol" placeholder="Enter Stock Symbol (e.g. AAPL)" />
+    <label>Start Date:</label>
+    <input type="date" id="start-date" />
+    <label>End Date:</label>
+    <input type="date" id="end-date" />
+    <button onclick="predict()">Predict</button>
+    <div class="result" id="output"></div>
+  </div>
+
+
+  <script>
+    function predict() {
+      const symbol = document.getElementById('symbol').value;
+      const start = document.getElementById('start-date').value;
+      const end = document.getElementById('end-date').value;
+
+
+      if (!symbol || !start || !end) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+
+      // Placeholder response (replace with real backend call)
+      const outputDiv = document.getElementById('output');
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = `<strong>Predicted Prices for ${symbol}</strong><br>From ${start} to ${end}<br><br><em>(Model results will appear here)</em>`;
+    }
+  </script>
+</body>
+</html>
