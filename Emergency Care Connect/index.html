@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Care Connect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: white;
+            margin: 20px auto;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .screen {
+            display: none;
+            height: 100%;
+            padding: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 30px 0;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .profile-icon {
+            width: 35px;
+            height: 35px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .sos-button {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 40px auto;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sos-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(220, 53, 69, 0.6);
+        }
+        
+        .sos-text {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .emergency-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .action-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .action-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .action-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .action-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .emergency-contacts {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .emergency-contacts h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+        }
+        
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+        
+        .nav-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+        
+        .nav-item.active {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+        
+        .hospital-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .hospital-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hospital-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .hospital-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .hospital-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .status-bar {
+            text-align: center;
+            padding: 10px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #dc3545;
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Home Screen -->
+        <div class="screen active" id="home">
+            <div class="header">
+                <div class="logo">Emergency Care</div>
+                <div class="profile-icon" onclick="showScreen('profile')">👤</div>
+            </div>
+            
+            <button class="sos-button" onclick="showScreen('sos-countdown')">
+                <div class="sos-text">🆘</div>
+                <div class="emergency-text">EMERGENCY</div>
+            </button>
+            
+            <div class="quick-actions">
+                <div class="action-card" onclick="showScreen('hospitals')">
+                    <div class="action-icon">🏥</div>
+                    <div class="action-title">Nearby Hospitals</div>
+                    <div class="action-subtitle">Find closest care</div>
+                </div>
+                
+                <div class="action-card" onclick="showScreen('first-aid')">
+                    <div class="action-icon">🩹</div>
+                    <div class="action-title">First Aid</div>
+                    <div class="action-subtitle">Emergency tips</div>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">📞</div>
+                    <div class="action-title">Emergency Calls</div>
+                    <div class="action-subtitle">108, Police, Fire</div>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">Health Tracker</div>
+                    <div class="action-subtitle">Daily vitals</div>
+                </div>
+            </div>
+            
+            <div class="emergency-contacts">
+                <h3>Emergency Contacts</h3>
+                <div class="contact-item">
+                    <span>John Doe (Spouse)</span>
+                    <span>📞</span>
+                </div>
+                <div class="contact-item">
+                    <span>Dr. Smith (Primary Care)</span>
+                    <span>📞</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SOS Countdown Screen -->
+        <div class="screen" id="sos-countdown">
+            <div class="header">
+                <div class="logo">Emergency Alert</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <h2 style="color: #dc3545; margin-bottom: 20px;">🚨 EMERGENCY ALERT ACTIVATING</h2>
+                <div class="countdown" id="countdown">3</div>
+                <p style="margin-bottom: 30px; color: #666;">
+                    Sending location and medical info to:<br>
+                    • Emergency contacts<br>
+                    • Nearby hospitals<br>
+                    • Ambulance services
+                </p>
+                <button class="cancel-btn" onclick="cancelSOS()">CANCEL EMERGENCY</button>
+            </div>
+        </div>
+        
+        <!-- Medical Profile Screen -->
+        <div class="screen" id="profile">
+            <div class="header">
+                <div class="logo">Medical Profile</div>
+                <button onclick="showScreen('home')" style="background:none;border:none;font-size:20px;">✕</button>
+            </div>
+            
+            <div style="overflow-y: auto; flex: 1;">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" value="John Doe" readonly>
+                </div>
+                
+                <div class="input-group">
+                    <label>Blood Group</label>
+                    <select>
+                        <option>O+</option>
+                        <option>A+</option>
+                        <option>B+</option>
+                        <option>AB+</option>
+                        <option>O-</option>
+                        <option>A-</option>
+                        <option>B-</option>
+                        <option>AB-</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" value="32">
+                </div>
+                
+                <div class="input-group">
+                    <label>Known Allergies</label>
+                    <textarea placeholder="Penicillin, Peanuts, etc."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Medical Conditions</label>
+                    <textarea placeholder="Diabetes, Hypertension, etc."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Current Medications</label>
+                    <textarea placeholder="List current medications"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Insurance Provider</label>
+                    <input type="text" placeholder="Health insurance company">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nearby Hospitals Screen -->
+        <div class="screen" id="hospitals">
+            <div class="header">
+                <div class="logo">Nearby Hospitals</div>
+                <button onclick="showScreen('home')" style="background:none;border:none;font-size:20px;">✕</button>
+            </div>
+            
+            <div class="status-bar">
+                📍 Showing hospitals within 5km of your location
+            </div>
+            
+            <div class="hospital-list">
+                <div class="hospital-item">
+                    <div class="hospital-name">City General Hospital</div>
+                    <div class="hospital-details">
+                        📍 2.3 km away • ⏱️ 8 min drive<br>
+                        🏥 Emergency 24/7 • Government Hospital
+                    </div>
+                    <div class="hospital-actions">
+                        <button class="btn btn-primary">📞 Call</button>
+                        <button class="btn btn-secondary">🗺️ Navigate</button>
+                    </div>
+                </div>
+                
+                <div class="hospital-item">
+                    <div class="hospital-name">Apollo Medical Center</div>
+                    <div class="hospital-details">
+                        📍 3.7 km away • ⏱️ 12 min drive<br>
+                        🏥 Emergency 24/7 • Private Hospital
+                    </div>
+                    <div class="hospital-actions">
+                        <button class="btn btn-primary">📞 Call</button>
+                        <button class="btn btn-secondary">🗺️ Navigate</button>
+                    </div>
+                </div>
+                
+                <div class="hospital-item">
+                    <div class="hospital-name">Max Healthcare</div>
+                    <div class="hospital-details">
+                        📍 4.1 km away • ⏱️ 15 min drive<br>
+                        🏥 Emergency 24/7 • Private Hospital
+                    </div>
+                    <div class="hospital-actions">
+                        <button class="btn btn-primary">📞 Call</button>
+                        <button class="btn btn-secondary">🗺️ Navigate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- First Aid Screen -->
+        <div class="screen" id="first-aid">
+            <div class="header">
+                <div class="logo">First Aid Assistant</div>
+                <button onclick="showScreen('home')" style="background:none;border:none;font-size:20px;">✕</button>
+            </div>
+            
+            <div style="overflow-y: auto; flex: 1;">
+                <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">⚠️ Emergency Situations</h3>
+                    <p style="font-size: 14px; color: #856404;">Always call emergency services first. These are basic guidelines only.</p>
+                </div>
+                
+                <div class="quick-actions">
+                    <div class="action-card">
+                        <div class="action-icon">❤️</div>
+                        <div class="action-title">Heart Attack</div>
+                        <div class="action-subtitle">Chest pain signs</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🧠</div>
+                        <div class="action-title">Stroke</div>
+                        <div class="action-subtitle">FAST method</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🫁</div>
+                        <div class="action-title">CPR Guide</div>
+                        <div class="action-subtitle">Step by step</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🩸</div>
+                        <div class="action-title">Bleeding</div>
+                        <div class="action-subtitle">Control bleeding</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">😵</div>
+                        <div class="action-title">Unconscious</div>
+                        <div class="action-subtitle">Recovery position</div>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon">🔥</div>
+                        <div class="action-title">Burns</div>
+                        <div class="action-subtitle">Cool & cover</div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px;">💬 Ask Emergency Assistant</h3>
+                    <input type="text" placeholder="Type your emergency question..." style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 25px;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="showScreen('home')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="showScreen('hospitals')">
+                <div class="nav-icon">🏥</div>
+                <div class="nav-label">Hospitals</div>
+            </div>
+            <div class="nav-item" onclick="showScreen('profile')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profile</div>
+            </div>
+            <div class="nav-item" onclick="showScreen('first-aid')">
+                <div class="nav-icon">🩹</div>
+                <div class="nav-label">First Aid</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sosTimer;
+        
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update nav active state
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Find and activate corresponding nav item
+            const navMap = {
+                'home': 0,
+                'hospitals': 1,
+                'profile': 2,
+                'first-aid': 3
+            };
+            
+            if (navMap[screenId] !== undefined) {
+                navItems[navMap[screenId]].classList.add('active');
+            }
+        }
+        
+        function startSOS() {
+            let count = 3;
+            const countdownEl = document.getElementById('countdown');
+            
+            sosTimer = setInterval(() => {
+                count--;
+                countdownEl.textContent = count;
+                
+                if (count <= 0) {
+                    clearInterval(sosTimer);
+                    // SOS activated - would send emergency alert here
+                    alert('🚨 EMERGENCY ALERT SENT!\n\nLocation and medical info shared with:\n• Emergency contacts\n• Nearby hospitals\n• Ambulance services');
+                    showScreen('home');
+                }
+            }, 1000);
+        }
+        
+        function cancelSOS() {
+            clearInterval(sosTimer);
+            showScreen('home');
+        }
+        
+        // Auto-start countdown when SOS countdown screen is shown
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const sosScreen = document.getElementById('sos-countdown');
+                    if (sosScreen.classList.contains('active')) {
+                        setTimeout(startSOS, 100);
+                    }
+                }
+            });
+        });
+        
+        observer.observe(document.getElementById('sos-countdown'), {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    </script>
+</body>
+</html>
