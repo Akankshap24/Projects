@@ -48,7 +48,7 @@ Every second matters in an emergency — yet many lives are lost due to delayed 
 
 **Akanksha Priyadarshinee Rath**  
 Student at IIT Madras, passionate about tech for good, AI, and healthcare innovation.  
-📧 [Email](mailto:akanksha@example.com) | 🌐 [Portfolio](https://your-portfolio-link.com) | 💼 [LinkedIn](https://linkedin.com/in/your-profile)
+📧 [Email](mailto:akankshaprath2004@gmail.com) | 🌐 [Portfolio](akanksharath.vercel.app) | 💼 [LinkedIn](https://www.linkedin.com/in/akanksha-priyadarshinee-rath/)
 
 
 
