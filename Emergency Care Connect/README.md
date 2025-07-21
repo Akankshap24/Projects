@@ -44,6 +44,10 @@ Every second matters in an emergency — yet many lives are lost due to delayed 
 - Government emergency response linkage
 - Auto medical record generation after service
 
+## Basic Wireframe
+<img width="1051" height="494" alt="image" src="https://github.com/user-attachments/assets/bf7a32c2-1352-4c17-b52b-010bf9e2fd04" />
+
+
 ## 👤 Author
 
 **Akanksha Priyadarshinee Rath**  
